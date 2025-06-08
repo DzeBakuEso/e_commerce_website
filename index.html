@@ -1,11 +1,12 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>E-Commerce Website</title>
+  <meta name="description" content="Online Store - Buy headphones, watches, keyboards and more at MyStore." />
+  <title>MyStore - E-Commerce Website</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <body>
 
@@ -13,12 +14,12 @@
   <header>
     <div class="container">
       <h1 class="logo">MyStore</h1>
-      <nav>
+      <nav aria-label="Main Navigation">
         <ul class="nav-links">
           <li><a href="index.html">Home</a></li>
-          <li><a href="#">Shop</a></li>
-          <li><a href="#">Cart</a></li>
-          <li><a href="#">Checkout</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="cart.html">Cart</a></li>
+          <li><a href="checkout.html">Checkout</a></li>
         </ul>
       </nav>
     </div>
@@ -29,45 +30,26 @@
     <div class="container">
       <h2>Welcome to MyStore</h2>
       <p>Find the best products at unbeatable prices.</p>
-      <a href="#" class="btn">Shop Now</a>
+      <a href="shop.html" class="btn">Shop Now</a>
     </div>
   </section>
 
   <!-- Product Showcase -->
-  <section class="products">
+  <section class="products" aria-label="Featured Products">
     <div class="container">
       <h3>Featured Products</h3>
       <div class="product-grid" id="product-list">
-
-        <!-- Product Cards -->
-        <div class="product-card">
-          <img src="images/headphones.jpg" alt="Wireless Headphones">
-          <div class="product-info">
-            <h3>Wireless Headphones</h3>
-            <p>$150</p>
-            <button class="add-to-cart" data-id="1">Add to Cart</button>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <img src="images/watch.jpg" alt="Smart Watch">
-          <div class="product-info">
-            <h3>Smart Watch</h3>
-            <p>$300</p>
-            <button class="add-to-cart" data-id="2">Add to Cart</button>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <img src="images/keyboard.jpg" alt="Gaming Keyboard">
-          <div class="product-info">
-            <h3>Gaming Keyboard</h3>
-            <p>$120</p>
-            <button class="add-to-cart" data-id="3">Add to Cart</button>
-          </div>
-        </div>
-
+        <!-- Products will be loaded dynamically via JS from data.json -->
       </div>
+    </div>
+  </section>
+
+  <!-- Cart Summary (if used here, otherwise handled on cart.html) -->
+  <section class="cart-summary">
+    <div class="container">
+      <h3>Your Cart</h3>
+      <div id="cart-items"></div>
+      <p>Total: <span id="total">$0.00</span></p>
     </div>
   </section>
 
@@ -78,6 +60,8 @@
     </div>
   </footer>
 
-  <script src="js/script.js"></script>
+  <!-- Scripts -->
+  <script src="js/main.js" defer></script>
+  <script src="js/cart.js" defer></script>
 </body>
 </html>

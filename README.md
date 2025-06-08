@@ -1,14 +1,20 @@
-# E-Commerce Website
+# E-commerce Website
 
-A fully responsive, multi-page e-commerce website built with HTML, CSS, and JavaScript.  
-It includes product listings, cart functionality, checkout with form validation, and an order confirmation modal.  
-Designed for the Software Development Pathway Assessment challenge.
+This is a simple responsive online store built using HTML, CSS, and JavaScript.
 
 ## Features
+- View products from `data.json`
+- Add/remove items to cart
+- Checkout with form validation
+- Cart is persisted with localStorage
 
-- Responsive design (mobile, tablet, desktop)
-- Add/remove/update cart items
-- VAT (20%) & fixed shipping cost ($50)
-- Form validation for checkout
-- Persistent cart using localStorage
-- Order confirmation modal
+## Pages
+- `index.html`: Homepage
+- `shop.html`: Shop listing
+- `cart.html`: Cart page
+- `checkout.html`: Checkout form
+
+## How to Run
+```bash
+python3 -m http.server
+# then open http://localhost:8000
