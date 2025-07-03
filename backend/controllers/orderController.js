@@ -1,5 +1,6 @@
 // backend/controllers/orderController.js
 const Order = require('../models/Order');
+const Product = require('../models/Product');
 
 // Create a new order
 const createOrder = async (req, res) => {
@@ -10,10 +11,15 @@ const createOrder = async (req, res) => {
       return res.status(400).json({ message: 'Cart is empty' });
     }
 
-    // Calculate total price
-    const totalPrice = cartItems.reduce((acc, item) => {
-      return acc + item.quantity * (item.price || 0);
-    }, 0);
+    // Calculate total price by fetching product prices
+    let totalPrice = 0;
+    for (const item of cartItems) {
+      const product = await Product.findById(item.productId);
+      if (!product) {
+        return res.status(404).json({ message: `Product not found: ${item.productId}` });
+      }
+      totalPrice += product.price * item.quantity;
+    }
 
     const newOrder = new Order({
       cartItems,
@@ -30,7 +36,7 @@ const createOrder = async (req, res) => {
   }
 };
 
-// Optional: Fetch all orders (admin use)
+// Get all orders
 const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
