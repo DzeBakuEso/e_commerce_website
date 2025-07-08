@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = 'https://e-commerce-website-up4q.onrender.com/api';
 
 document.addEventListener("DOMContentLoaded", () => {
   fetch(`${API_BASE}/products`)
@@ -25,7 +25,6 @@ function renderProducts(products) {
   products.forEach((product) => {
     const productCard = document.createElement("div");
     productCard.classList.add("product-card");
-
     productCard.innerHTML = `
       <img src="${product.image}" alt="${product.name}" onerror="this.src='images/placeholder.jpg'" />
       <div class="product-info">
