@@ -1,12 +1,14 @@
+const API_BASE = 'http://localhost:5000/api';
+
 document.addEventListener("DOMContentLoaded", () => {
-  fetch("assets/data.json")
+  fetch(`${API_BASE}/products`)
     .then((response) => response.json())
     .then((products) => {
       renderProducts(products);
       attachCartListeners(products);
     })
     .catch((error) => {
-      console.error("Error loading product data:", error);
+      console.error("Error loading products from API:", error);
     });
 });
 
@@ -18,7 +20,7 @@ function renderProducts(products) {
 
   if (!productList) return;
 
-  productList.innerHTML = ""; // Clear if rerendered
+  productList.innerHTML = ""; // Clear container
 
   products.forEach((product) => {
     const productCard = document.createElement("div");
@@ -29,7 +31,7 @@ function renderProducts(products) {
       <div class="product-info">
         <h3>${product.name}</h3>
         <p>$${product.price.toFixed(2)}</p>
-        <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+        <button class="add-to-cart" data-id="${product._id}">Add to Cart</button>
       </div>
     `;
 
@@ -38,15 +40,16 @@ function renderProducts(products) {
 }
 
 /**
- * Attach click event listeners to all "Add to Cart" buttons.
+ * Attach click event listeners to "Add to Cart" buttons.
  */
 function attachCartListeners(products) {
   const buttons = document.querySelectorAll(".add-to-cart");
 
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
-      const productId = parseInt(button.dataset.id);
-      const product = products.find((p) => p.id === productId);
+      const productId = button.dataset.id;
+      const product = products.find((p) => p._id === productId);
+
       if (product) {
         addToCart(product);
       }
@@ -55,12 +58,12 @@ function attachCartListeners(products) {
 }
 
 /**
- * Dummy addToCart handler — actual logic is in cart.js
+ * Add product to cart using the global handler (cart.js).
  */
 function addToCart(product) {
   if (typeof window.handleAddToCart === "function") {
     window.handleAddToCart(product);
   } else {
-    console.warn("Cart handler not found. Please define `handleAddToCart` in cart.js.");
+    console.warn("Cart handler not found. Make sure cart.js is loaded.");
   }
 }

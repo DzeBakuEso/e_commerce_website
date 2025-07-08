@@ -1,31 +1,48 @@
-// cart.js
-
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 function saveCart() {
   localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-function addToCart(product) {
-  const existingProduct = cart.find(item => item.id === product.id);
+async function addToCart(product) {
+  const existingProduct = cart.find(item => item._id === product._id);
   if (existingProduct) {
     existingProduct.quantity += 1;
   } else {
     product.quantity = 1;
     cart.push(product);
   }
+
   saveCart();
   renderCart();
+
+  // Sync with backend
+  try {
+    const res = await fetch('/api/cart/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        productId: product._id,
+        quantity: product.quantity,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error('Failed to sync cart item to backend');
+    }
+  } catch (err) {
+    console.error('Add to cart backend error:', err.message);
+  }
 }
 
 function removeFromCart(productId) {
-  cart = cart.filter(item => item.id !== productId);
+  cart = cart.filter(item => item._id !== productId);
   saveCart();
   renderCart();
 }
 
 function updateQuantity(productId, newQuantity) {
-  const product = cart.find(item => item.id === productId);
+  const product = cart.find(item => item._id === productId);
   if (product) {
     product.quantity = newQuantity;
     if (product.quantity <= 0) {
@@ -59,12 +76,18 @@ function renderCart() {
       div.classList.add('cart-item');
 
       div.innerHTML = `
-        <p><strong>${item.name}</strong> - $${item.price.toFixed(2)}</p>
-        <label>
-          Quantity: 
-          <input type="number" min="1" value="${item.quantity}" data-id="${item.id}" class="qty-input" />
-        </label>
-        <button class="remove-btn" data-id="${item.id}">Remove</button>
+        <div class="cart-image">
+          <img src="${item.image}" alt="${item.name}" loading="lazy" />
+        </div>
+        <div class="cart-details">
+          <p><strong>${item.name}</strong></p>
+          <p>Price: $${item.price.toFixed(2)}</p>
+          <label>
+            Quantity:
+            <input type="number" min="1" value="${item.quantity}" data-id="${item._id}" class="qty-input" />
+          </label>
+          <button class="remove-btn" data-id="${item._id}">Remove</button>
+        </div>
       `;
 
       cartContainer.appendChild(div);
@@ -72,25 +95,22 @@ function renderCart() {
   }
 
   const totals = calculateTotals();
-
   document.getElementById('subtotal').textContent = totals.productTotal.toFixed(2);
   document.getElementById('shipping').textContent = totals.shipping.toFixed(2);
   document.getElementById('vat').textContent = totals.vat.toFixed(2);
   document.getElementById('total').textContent = totals.grandTotal.toFixed(2);
 
-  // Add event listeners for quantity inputs
   document.querySelectorAll('.qty-input').forEach(input => {
     input.addEventListener('change', (e) => {
       const newQty = parseInt(e.target.value);
-      const id = parseInt(e.target.getAttribute('data-id'));
+      const id = e.target.getAttribute('data-id');
       if (newQty > 0) updateQuantity(id, newQty);
     });
   });
 
-  // Add event listeners for remove buttons
   document.querySelectorAll('.remove-btn').forEach(button => {
     button.addEventListener('click', (e) => {
-      const id = parseInt(e.target.getAttribute('data-id'));
+      const id = e.target.getAttribute('data-id');
       removeFromCart(id);
     });
   });

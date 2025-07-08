@@ -38,8 +38,7 @@ function addToCart(productId) {
   console.log("Cart:", cart); // For now, show in console
   updateCartUI(); // This will be defined in the next steps
 }
-
-// Hook into DOM buttons (you'll connect these to actual buttons in HTML later)
+"script.js" 52L, 1199B                      // Hook into DOM buttons (you'll connect these to actual buttons in HTML later)
 document.addEventListener("DOMContentLoaded", () => {
   const addButtons = document.querySelectorAll(".add-to-cart");
 
