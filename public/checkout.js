@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = 'https://e-commerce-website-up4q.onrender.com/api';
 
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('checkout-form');
@@ -6,11 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const customerName = document.getElementById('customer-name').value.trim();
-    const shippingAddress = document.getElementById('shipping-address').value.trim();
+    const customerName = document.getElementById('name').value.trim();
+    const shippingAddress = document.getElementById('address').value.trim();
 
     if (!customerName || !shippingAddress) {
-      alert('Please fill in all fields.');
+      alert('Please fill in all required fields.');
       return;
     }
 
@@ -21,9 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Transform localStorage cart to expected backend format
     const cartItems = cart.map(item => ({
-      productId: item.id,
+      productId: item._id,
       quantity: item.quantity
     }));
 
@@ -43,9 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
         throw new Error(err.message || 'Failed to place order');
       }
 
-      // Success
       alert('Order placed successfully!');
-      localStorage.removeItem('cart'); // Clear cart
+      localStorage.removeItem('cart');
       window.location.href = 'thankyou.html';
 
     } catch (error) {

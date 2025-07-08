@@ -1,10 +1,12 @@
+const API_BASE = 'https://e-commerce-website-up4q.onrender.com/api';
+
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 function saveCart() {
   localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-async function addToCart(product) {
+function addToCart(product) {
   const existingProduct = cart.find(item => item._id === product._id);
   if (existingProduct) {
     existingProduct.quantity += 1;
@@ -15,24 +17,6 @@ async function addToCart(product) {
 
   saveCart();
   renderCart();
-
-  // Sync with backend
-  try {
-    const res = await fetch('/api/cart/add', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        productId: product._id,
-        quantity: product.quantity,
-      }),
-    });
-
-    if (!res.ok) {
-      throw new Error('Failed to sync cart item to backend');
-    }
-  } catch (err) {
-    console.error('Add to cart backend error:', err.message);
-  }
 }
 
 function removeFromCart(productId) {
@@ -116,7 +100,6 @@ function renderCart() {
   });
 }
 
-// Initial render
 document.addEventListener('DOMContentLoaded', () => {
   renderCart();
 });
